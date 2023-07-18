@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-
+import os
 import random
 import re
 import time
@@ -11,6 +11,7 @@ from ykenan_log import Logger
 from selenium.webdriver import Firefox
 from selenium.webdriver import FirefoxOptions
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 # noinspection PyPep8Naming
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -21,6 +22,8 @@ from ykenan_util.snowflake import IdWorker
  * @Description  : Util class
 '''
 
+SPECIAL_SYMBOLS: str = "[ |)>=,%;&#:'<(/\\\\+-]+"
+
 
 class Util:
     """
@@ -30,8 +33,8 @@ class Util:
     def __init__(self,
                  driver=None,
                  wait=None,
-                 is_show=False,
-                 is_refresh=False,
+                 is_show: bool = False,
+                 is_refresh: bool = False,
                  log_file: str = "YKenan_util",
                  is_form_log_file: bool = True):
         """
@@ -44,10 +47,10 @@ class Util:
         :param is_form_log_file: Is a log file formed
         """
         self.log = Logger(name="YKenan_util", log_path=log_file, is_form_file=is_form_log_file)
-        self.wait = wait
-        self.driver = driver
         self.is_show = is_show
         self.is_refresh = is_refresh
+        self.driver = driver if driver else self.init_driver()
+        self.wait = wait if wait else WebDriverWait(self.driver, 10)
 
     @staticmethod
     def generate_unique_id() -> str:
@@ -131,3 +134,67 @@ class Util:
             elif i % 10 == 0:
                 refresh(True)
             return self.circle_run(title_, callback, refresh, i)
+
+    def exec_command(self, command: str) -> list:
+        """
+        执行命令
+        :param command: 命令代码
+        :return: 结果数组
+        """
+        self.log.info(f">>>>>>>>> start 执行 {command} 命令 >>>>>>>>>")
+        info: str = os.popen(command).read()
+        info_split: list = info.split("\n")
+        info_list: list = []
+        i: int = 0
+        while True:
+            if info_split[i] is None or info_split[i] == "":
+                break
+            info_list.append(info_split[i])
+            i += 1
+        self.log.info(f">>>>>>>>> end 执行 {command} 命令 >>>>>>>>>")
+        return info_list
+
+    @staticmethod
+    def format_str_abbr(str_name: str):
+        str_split = re.split(SPECIAL_SYMBOLS, str_name)
+        str_sample = ""
+        if len(str_split) > 1:
+            for t_s in str_split:
+                if t_s is not None and t_s != "":
+                    str_sample += t_s[0].capitalize()
+        else:
+            str_sample = str_name
+        return str_sample
+
+    @staticmethod
+    def get_number(str_: str) -> int:
+        """
+        冲字符串中获取数量
+        :param str_:
+        :return:
+        """
+        re_compile = re.compile("[0-9]+")
+        page_number = re.findall(re_compile, str_)[0]
+        return int(page_number)
+
+    @staticmethod
+    def remove_r_n(str_: str, repl: str = " | ") -> str:
+        """
+        移除 \r \n
+        :param str_:
+        :param repl:
+        :return:
+        """
+        return re.sub("[\r\n]+", repl, str_)
+
+    @staticmethod
+    def single_line(info_list: list):
+        """
+        生成添加行的信息
+        :param info_list:
+        :return:
+        """
+        line_one: str = ''
+        for col in info_list:
+            line_one += f"{str(col)}\t"
+        return f"{line_one.strip()}\n"
