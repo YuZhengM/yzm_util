@@ -142,6 +142,7 @@ class FirefoxSelenium:
     def __init__(self,
                  driver=None,
                  wait=None,
+                 timeout=10,
                  is_show: bool = False,
                  is_refresh: bool = False,
                  log_file: str = "YKenan_util",
@@ -150,6 +151,7 @@ class FirefoxSelenium:
         Selenium Util
         :param driver: 引擎
         :param wait: selenium 等待
+        :param timeout: 等待的秒数
         :param is_show: 是否启动无头模式
         :param is_refresh: 是否刷新页面
         """
@@ -157,7 +159,7 @@ class FirefoxSelenium:
         self.is_show = is_show
         self.is_refresh = is_refresh
         self.driver = driver if driver else self.init_driver()
-        self.wait = wait if wait else WebDriverWait(self.driver, 10)
+        self.wait = wait if wait else WebDriverWait(self.driver, timeout)
 
     def init_driver(self):
         """

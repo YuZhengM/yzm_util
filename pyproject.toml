@@ -3,7 +3,7 @@ requires = ["setuptools>=42", "ykenan-log>=0.2.0", "selenium>=4.10.0"]
 build-backend = "setuptools.build_meta"
 [project]
 name = "ykenan_util"
-version = "0.0.4"
+version = "0.0.5"
 authors = [
     { name = "Yu Zhengmin", email = "3236170161@qq.com" },
 ]
