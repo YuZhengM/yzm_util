@@ -31,40 +31,42 @@ class Util:
     初始化文件
     """
 
-    def __init__(self, log_file: str = "YKenan_util", is_form_log_file: bool = True):
+    def __init__(self, log_file: str = "YKenan_util", is_verbose: bool = False, is_form_log_file: bool = False):
         """
         Initialization creation information, public information
         :param log_file: Path to form a log file
+        :param is_verbose: Is log information displayed
         :param is_form_log_file: Is a log file formed
         """
         self.log = Logger(name="YKenan_util", log_path=log_file, is_form_file=is_form_log_file)
+        self.is_verbose = is_verbose
 
     @staticmethod
     def generate_unique_id() -> str:
         """
-        形成数据库中的表
+        Generate unique ID
         """
         uuid_: str = str(uuid.uuid1())
         uuid__: str = re.sub("-", "", uuid_)
         id_: int = round(random.Random().random() * 100 % 31)
         unique: str = uuid__ + IdWorker().generator(str(id_))
-        # 正常长度不会大于 62, 防止意外, 数据库存储长度为 pow(2,6)
+        # The normal length should not exceed 62 to prevent accidents. The database storage length is pow(2, 6)
         return unique[1:62]
 
     def circle_run(self, title_, callback, refresh, i=0):
         """
-        回调函数 主要用户 selenium 访问进行获取相关信息为获取到进行重新获取
-        :param title_: 是 callback 函数的参数信息
-        :param callback: 回调的第一个函数, 主要的执行函数
-        :param refresh: 回调的第二个函数, 当第一个 callback 函数出现错误时候进行一定的刷新循环
-        :param i: 循环的次数, 也就是 callback 函数执行错误的次数
-        :return: 相关信息
+        The callback function is mainly accessed by the user selenium to retrieve relevant information and retrieve it again
+        :param title_: It is the parameter information of the callback function
+        :param callback: The first function of the callback, the main execution function
+        :param refresh: The second callback function performs a certain refresh loop when the first callback function encounters an error
+        :param i: The number of loops, which is the number of times the callback function executes errors
+        :return: Related Information
         """
         try:
             return callback(title_)
         except Exception as e:
             i += 1
-            self.log.warn(f"获取元素失败, 重新获取: {e}")
+            self.log.warn(f"Failed to retrieve element, retrieve again: {e}")
             print(i)
             if i % 5 == 0:
                 refresh()
@@ -74,11 +76,13 @@ class Util:
 
     def exec_command(self, command: str) -> list:
         """
-        执行命令
-        :param command: 命令代码
-        :return: 结果数组
+        Execute command
+        :param command: command code
+        :return: Result array
         """
-        self.log.info(f">>>>>>>>> start 执行 {command} 命令 >>>>>>>>>")
+        if self.is_verbose:
+            self.log.info(f">>>>>>>>> Start executing {command} command >>>>>>>>>")
+
         info: str = os.popen(command).read()
         info_split: list = info.split("\n")
         info_list: list = []
@@ -88,7 +92,10 @@ class Util:
                 break
             info_list.append(info_split[i])
             i += 1
-        self.log.info(f">>>>>>>>> end 执行 {command} 命令 >>>>>>>>>")
+
+        if self.is_verbose:
+            self.log.info(f">>>>>>>>> End executing {command} command >>>>>>>>>")
+
         return info_list
 
     @staticmethod
@@ -106,7 +113,7 @@ class Util:
     @staticmethod
     def get_number(str_: str) -> int:
         """
-        冲字符串中获取数量
+        Retrieve quantity from the flushing string
         :param str_:
         :return:
         """
@@ -117,7 +124,7 @@ class Util:
     @staticmethod
     def remove_r_n(str_: str, repl: str = " | ") -> str:
         """
-        移除 \r \n
+        remove \r \n
         :param str_:
         :param repl:
         :return:
@@ -127,7 +134,7 @@ class Util:
     @staticmethod
     def single_line(info_list: list):
         """
-        生成添加行的信息
+        Generate information for adding rows
         :param info_list:
         :return:
         """
@@ -139,21 +146,23 @@ class Util:
 
 class FirefoxSelenium:
 
-    def __init__(self,
-                 driver=None,
-                 wait=None,
-                 timeout=10,
-                 is_show: bool = False,
-                 is_refresh: bool = False,
-                 log_file: str = "YKenan_util",
-                 is_form_log_file: bool = True):
+    def __init__(
+        self,
+        driver=None,
+        wait=None,
+        timeout=10,
+        is_show: bool = False,
+        is_refresh: bool = False,
+        log_file: str = "YKenan_util",
+        is_form_log_file: bool = False
+    ):
         """
         Selenium Util
-        :param driver: 引擎
-        :param wait: selenium 等待
-        :param timeout: 等待的秒数
-        :param is_show: 是否启动无头模式
-        :param is_refresh: 是否刷新页面
+        :param driver: driver
+        :param wait: selenium wait
+        :param timeout: Waiting seconds
+        :param is_show: Is headless mode activated
+        :param is_refresh: Whether to refresh the page
         """
         self.log = Logger(name="YKenan_util", log_path=log_file, is_form_file=is_form_log_file)
         self.is_show = is_show
@@ -163,50 +172,50 @@ class FirefoxSelenium:
 
     def init_driver(self):
         """
-        浏览器引擎初始化
-        :return: 浏览器引擎
+        Browser engine initialization
+        :return: Browser driver
         """
         options = FirefoxOptions()
-        # 设置不加载
+        # Set not to load
         options.page_load_strategy = 'normal'
-        # 是否设置为无头模式
+        # Is it set to headless mode
         if self.is_show:
-            # 设置火狐为 headless 无界面模式
+            # Set Firefox to headless interface free mode
             options.add_argument("--headless")
             options.add_argument("--disable-gpu")
-        # 实例化浏览器对象
+        # Instantiating browser objects
         return Firefox(options=options)
 
     def refresh_handle(self):
         """
-        窗口处理, 对 selenium 跳转 URL 的处理
+        Window processing, handling of selenium redirect URLs
         :return: None
         """
         time.sleep(1)
-        # 得到跳转之前的页面
+        # Get the page before jumping
         original_window = self.driver.current_window_handle
-        # 获取所有的窗口
+        # Get all windows
         handles = self.driver.window_handles
-        # 切换窗口
+        # switch windows
         for handle in handles:
             if handle != original_window:
-                # 关闭前面的窗口
+                # Close the previous window
                 self.driver.close()
                 self.driver.switch_to.window(handle)
-        # 刷新和沉睡是为了防止得到的页面代码不全
+        # Refreshing and sleeping are to prevent incomplete page code obtained
         time.sleep(1)
         if self.is_refresh:
             self.driver.refresh()
 
     def is_element_exist(self, xpath):
         """
-        判断某个标签是否存在
-        :param xpath: xpath 解析的路径
-        :return: 是否存在 true: 存在
+        Determine whether a certain label exists
+        :param xpath: Parsed path
+        :return: Is there true: Yes
         """
         try:
             self.wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
             return True
         except Exception as e:
-            self.log.debug(f"标签不存在: {e.args}")
+            self.log.debug(f"Label does not exist: {e.args}")
             return False

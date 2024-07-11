@@ -1,9 +1,9 @@
 [build-system]
-requires = ["setuptools>=42", "ykenan-log>=0.2.0", "selenium>=4.10.0"]
+requires = ["setuptools>=42", "ykenan-log>=0.2.2", "selenium>=4.10.0"]
 build-backend = "setuptools.build_meta"
 [project]
 name = "ykenan_util"
-version = "0.0.5"
+version = "0.0.6"
 authors = [
     { name = "Yu Zhengmin", email = "3236170161@qq.com" },
 ]
@@ -11,7 +11,7 @@ keywords = ["ykenan", "util", "tool"]
 description = "Tool class"
 readme = "README.md"
 requires-python = ">=3.7"
-dependencies = ["ykenan-log>=0.2.0", "selenium>=4.10.0"]
+dependencies = ["ykenan-log>=0.2.2", "selenium>=4.10.0"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",

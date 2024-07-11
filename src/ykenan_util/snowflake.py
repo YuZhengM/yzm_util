@@ -6,7 +6,7 @@ import time
 
 class IdWorker(object):
     """
-    组件编号生成器
+    Component Number Generator
     """
 
     def __init__(self):
@@ -27,9 +27,11 @@ class IdWorker(object):
         self.DATACENTER_LEFT = self.sequenceBit + self.machineBit
         self.TIMESTMP_LEFT = self.DATACENTER_LEFT + self.dataBit
 
-    def generator(self, component_type: str):
+    def generator(self, component_type: str) -> str:
         """
-        适合单线程单服务节点，多线程或者多节点 可能会出现重复，（多节点，需要保证dataID和machineID 不同。sequenceID序号可以通过当前时间戳和self.last进行比对 相同则递增，也可使用一定位数的随机数。解决多线程问题需为单例模式）
+        Suitable for single threaded single service nodes, where there may be duplication between multiple threads or nodes.
+        For multiple nodes, it is necessary to ensure that the `dataID` and `machineID` are different.
+        The sequence ID number can be incremented by comparing the current timestamp and `self.last`, or a certain number of random digits can be used. Solving multi-threaded problems requires singleton mode
         :param component_type:
         :return:
         """
