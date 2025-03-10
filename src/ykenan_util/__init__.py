@@ -19,7 +19,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from ykenan_util.snowflake import IdWorker
 
 '''
- * @Author       : YKenan
+ * @Author       : Zhengmin Yu
  * @Description  : Util class
 '''
 
@@ -31,14 +31,14 @@ class Util:
     初始化文件
     """
 
-    def __init__(self, log_file: str = "YKenan_util", is_verbose: bool = False, is_form_log_file: bool = False):
+    def __init__(self, log_file: str = "util", is_verbose: bool = False, is_form_log_file: bool = False):
         """
         Initialization creation information, public information
         :param log_file: Path to form a log file
         :param is_verbose: Is log information displayed
         :param is_form_log_file: Is a log file formed
         """
-        self.log = Logger(name="YKenan_util", log_path=log_file, is_form_file=is_form_log_file)
+        self.log = Logger(name="util", log_path=log_file, is_form_file=is_form_log_file)
         self.is_verbose = is_verbose
 
     @staticmethod
@@ -153,7 +153,7 @@ class FirefoxSelenium:
         timeout=10,
         is_show: bool = False,
         is_refresh: bool = False,
-        log_file: str = "YKenan_util",
+        log_file: str = "util",
         is_form_log_file: bool = False
     ):
         """
@@ -164,7 +164,7 @@ class FirefoxSelenium:
         :param is_show: Is headless mode activated
         :param is_refresh: Whether to refresh the page
         """
-        self.log = Logger(name="YKenan_util", log_path=log_file, is_form_file=is_form_log_file)
+        self.log = Logger(name="util", log_path=log_file, is_form_file=is_form_log_file)
         self.is_show = is_show
         self.is_refresh = is_refresh
         self.driver = driver if driver else self.init_driver()
