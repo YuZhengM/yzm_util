@@ -1,22 +1,22 @@
-# ykenan_util
+# yzm_util
 
 > **`File read and write operations`**
 
 This is a simple log package. You can see
-[Github-ykenan_util](https://github.com/YuZhengM/ykenan_util)
-[PyPI-ykenan_util](https://pypi.org/project/ykenan_util/)
+[Github-yzm_util](https://github.com/YuZhengM/yzm_util)
+[PyPI-yzm_util](https://pypi.org/project/yzm_util/)
 
 ## Use
 
 > install
 
 ```shell
-pip install ykenan_util
+pip install yzm_util
 ```
 
 > import
 
 ```shell
-import ykenan_util as yu
+import yzm_util as yu
 ```
 

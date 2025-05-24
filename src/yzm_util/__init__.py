@@ -7,7 +7,7 @@ import re
 import time
 import uuid
 
-from ykenan_log import Logger
+from yzm_log import Logger
 
 from selenium.webdriver import Firefox
 from selenium.webdriver import FirefoxOptions
@@ -16,10 +16,10 @@ from selenium.webdriver.support.wait import WebDriverWait
 # noinspection PyPep8Naming
 from selenium.webdriver.support import expected_conditions as EC
 
-from ykenan_util.snowflake import IdWorker
+from yzm_util.snowflake import IdWorker
 
 '''
- * @Author       : Zhengmin Yu
+ * @Author       : Zheng-Min Yu
  * @Description  : Util class
 '''
 
