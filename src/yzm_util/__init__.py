@@ -9,14 +9,7 @@ import uuid
 
 from yzm_log import Logger
 
-from selenium.webdriver import Firefox
-from selenium.webdriver import FirefoxOptions
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-# noinspection PyPep8Naming
-from selenium.webdriver.support import expected_conditions as EC
-
-from yzm_util.snowflake import IdWorker
+from .snowflake import IdWorker
 
 '''
  * @Author       : Zheng-Min Yu
@@ -66,7 +59,7 @@ class Util:
             return callback(title_)
         except Exception as e:
             i += 1
-            self.log.warn(f"Failed to retrieve element, retrieve again: {e}")
+            self.log.warning(f"Failed to retrieve element, retrieve again: {e}")
             print(i)
             if i % 5 == 0:
                 refresh()
@@ -164,6 +157,9 @@ class FirefoxSelenium:
         :param is_show: Is headless mode activated
         :param is_refresh: Whether to refresh the page
         """
+
+        from selenium.webdriver.support.wait import WebDriverWait
+
         self.log = Logger(name="util", log_path=log_file, is_form_file=is_form_log_file)
         self.is_show = is_show
         self.is_refresh = is_refresh
@@ -175,6 +171,9 @@ class FirefoxSelenium:
         Browser engine initialization
         :return: Browser driver
         """
+        from selenium.webdriver import Firefox
+        from selenium.webdriver import FirefoxOptions
+
         options = FirefoxOptions()
         # Set not to load
         options.page_load_strategy = 'normal'
@@ -213,6 +212,10 @@ class FirefoxSelenium:
         :param xpath: Parsed path
         :return: Is there true: Yes
         """
+        from selenium.webdriver.common.by import By
+        # noinspection PyPep8Naming
+        from selenium.webdriver.support import expected_conditions as EC
+
         try:
             self.wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
             return True
